@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "126580034022",
+    "project_id": "snapchat-kea",
+    "storage_bucket": "snapchat-kea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126580034022:android:34f2449633507a11b76e27",
+        "android_client_info": {
+          "package_name": "com.example.snapchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126580034022-bdgvmkhrct1bgl9vdps4unhpl4ga0avc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7p3QXK7TPeLBZ2h4eodx1XmX_QPqJ40Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126580034022-bdgvmkhrct1bgl9vdps4unhpl4ga0avc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

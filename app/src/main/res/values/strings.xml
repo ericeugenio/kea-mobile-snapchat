@@ -1,0 +1,37 @@
+<resources>
+    <!-- Common -->
+    <string name="app_name">snapchat</string>
+
+    <!-- Permission -->
+    <string name="permission_go_to_settings">Go to Settings</string>
+    <string name="permission_camera_title">Enable camera</string>
+    <string name="permission_camera_rationale_text">To take a photo and share it with your friends, the app requires your permission to access the camera.</string>
+    <string name="permission_camera_permanently_denied_text">It looks like camera permission has been permanently declined. To take a photo and share it with your friends you should grant permissions from the Settings app.</string>
+
+
+    <!-- SignInScreen -->
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="email_error">Please insert a valid email.</string>
+    <string name="empty_password_error">Password cannot be empty.</string>
+
+    <!-- SignUpScreen -->
+    <string name="sign_up">Sign up</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="username">Username</string>
+
+    <!-- HomeScreen -->
+    <string name="camera">Camera</string>
+    <string name="image">Image Library</string>
+
+    <!-- CameraScreen -->
+    <string name="go_home">Go Home</string>
+
+    <!-- ImagePreviewScreen -->
+    <string name="add_a_caption">Add a caption…</string>
+
+    <!-- ProfileScreen -->
+    <string name="profile">Profile</string>
+    <string name="sign_out">Sign out</string>
+    </resources>
