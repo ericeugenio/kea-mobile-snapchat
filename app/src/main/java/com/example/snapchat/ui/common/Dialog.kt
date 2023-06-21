@@ -28,7 +28,7 @@ fun PermissionDialog(
         icon = {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = "Dialog icon"
+                contentDescription = null
             )
         },
         confirmButton = {
@@ -46,6 +46,7 @@ object PermissionDialogContentProvider {
     fun getTitle(permission: String): Int {
         return when (permission) {
             Manifest.permission.CAMERA -> R.string.permission_camera_title
+            Manifest.permission.ACCESS_MEDIA_LOCATION -> R.string.permission_media_title
             else -> return -1
         }
     }
@@ -56,6 +57,10 @@ object PermissionDialogContentProvider {
                 if (isPermanentlyDenied) R.string.permission_camera_permanently_denied_text
                 else R.string.permission_camera_rationale_text
             }
+            Manifest.permission.ACCESS_MEDIA_LOCATION -> {
+                if (isPermanentlyDenied) R.string.permission_media_permanently_denied_text
+                else R.string.permission_media_rationale_text
+            }
             else -> return -1
         }
     }
@@ -63,6 +68,7 @@ object PermissionDialogContentProvider {
     fun getIcon(permission: String): Int {
         return when (permission) {
             Manifest.permission.CAMERA -> R.drawable.ic_camera
+            Manifest.permission.ACCESS_MEDIA_LOCATION -> R.drawable.ic_image
             else -> return -1
         }
     }

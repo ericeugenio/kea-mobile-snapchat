@@ -2,17 +2,16 @@ package com.example.snapchat.ui.common
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -101,26 +100,36 @@ fun MessageField(
     onSend: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val density = LocalDensity.current
+    var columnHeight by remember { mutableStateOf(0.dp) }
+
     OutlinedTextField(
         maxLines = 4,
         modifier = modifier
             .fillMaxWidth()
-            .padding(24.dp),
+            .padding(24.dp)
+            .onGloballyPositioned { coordinates ->
+                columnHeight = with(density) { coordinates.size.height.toDp() }
+            },
         value = value,
         onValueChange = { onValueChange(it) },
         placeholder = { Text(text = stringResource(R.string.add_a_caption)) },
         trailingIcon = {
-            BasicFilledIconButton(
-                icon = R.drawable.ic_send,
-                onClick = onSend,
-                modifier = Modifier.padding(4.dp)
-            )
+            Column (
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.height(columnHeight)
+            ) {
+                BasicFilledIconButton(
+                    icon = R.drawable.ic_send,
+                    onClick = onSend,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
         },
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White
-        ),
-        shape = RoundedCornerShape(24.dp)
+        )
     )
 }
 
@@ -145,7 +154,7 @@ private fun BasicField(
         leadingIcon = {
             Icon(
                 painter = painterResource(icon),
-                contentDescription = "TextField icon"
+                contentDescription = null
             )
         },
         keyboardOptions = KeyboardOptions(
@@ -185,7 +194,7 @@ private fun PasswordField(
         leadingIcon = {
             Icon(
                 painter = painterResource(R.drawable.ic_lock),
-                contentDescription = "PasswordField leading icon"
+                contentDescription = null
             )
         },
         trailingIcon = {
@@ -194,7 +203,7 @@ private fun PasswordField(
             ) {
                 Icon(
                     painter = icon,
-                    contentDescription = "PasswordField trailing icon"
+                    contentDescription = null
                 )
             }
         },

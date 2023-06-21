@@ -2,7 +2,7 @@ package com.example.snapchat.data.repository
 
 import com.example.snapchat.data.model.User
 
-interface AuthRepository {
+interface UserRepository {
     val currentUser: User?
     val isUserLogged: Boolean
 

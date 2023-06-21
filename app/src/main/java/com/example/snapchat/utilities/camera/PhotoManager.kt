@@ -1,11 +1,9 @@
-package com.example.snapchat.utilities.hardware
+package com.example.snapchat.utilities.camera
 
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.camera.core.*
-import androidx.camera.core.CameraSelector.LensFacing
-import androidx.camera.core.ImageCapture.FlashMode
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.concurrent.futures.await
@@ -21,9 +19,9 @@ interface PhotoListener {
     fun onError()
 }
 
-data class CameraUiState(
-    @FlashMode val flashMode: Int = ImageCapture.FLASH_MODE_OFF,
-    @LensFacing val lens: Int = CameraSelector.LENS_FACING_BACK,
+data class PhotoUiState(
+    @ImageCapture.FlashMode val flashMode: Int = ImageCapture.FLASH_MODE_OFF,
+    @CameraSelector.LensFacing val lens: Int = CameraSelector.LENS_FACING_BACK,
     val lensInfo: MutableMap<Int, CameraInfo> = mutableMapOf()
 ) {
     fun hasFlash(): Boolean = lensInfo[lens]?.hasFlashUnit() == true
@@ -59,20 +57,12 @@ class PhotoManager private constructor(
         }
     }
 
-    fun addListener(listener: PhotoListener) {
-        this.listener = listener
-    }
-
-    fun removeListener() {
-        this.listener = null
-    }
-
-    fun getPreview(cameraUiState: CameraUiState, cameraPreview: PreviewView = previewView()) : PreviewView {
+    fun getPreview(photoUiState: PhotoUiState, cameraPreview: PreviewView = previewView()) : PreviewView {
         lifecycleOwner.lifecycleScope.launch {
             lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 val cameraProvider = cameraProviderFuture.await()
                 val cameraSelector = CameraSelector.Builder()
-                    .requireLensFacing(cameraUiState.lens)
+                    .requireLensFacing(photoUiState.lens)
                     .build()
 
                 previewUseCase = Preview.Builder()
@@ -82,7 +72,7 @@ class PhotoManager private constructor(
                     }
                 imageCaptureUseCase = ImageCapture.Builder()
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
-                    .setFlashMode(cameraUiState.flashMode)
+                    .setFlashMode(photoUiState.flashMode)
                     .build()
 
                 try {
@@ -103,7 +93,7 @@ class PhotoManager private constructor(
     }
 
     fun captureImage() {
-        val file = File.createTempFile("temp", "jpg")
+        val file = File.createTempFile("temp", ".jpg")
         val outputFileOptions = ImageCapture.OutputFileOptions.Builder(file)
             .build()
 

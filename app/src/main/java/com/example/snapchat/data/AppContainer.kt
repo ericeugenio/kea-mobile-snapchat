@@ -1,26 +1,35 @@
 package com.example.snapchat.data
 
-import com.example.snapchat.data.repository.FirebaseAuthRepository
-import com.example.snapchat.data.repository.AuthRepository
-import com.example.snapchat.data.repository.FirebaseImageRepository
-import com.example.snapchat.data.repository.ImageRepository
+import com.example.snapchat.data.repository.firebase.FirebaseUserRepository
+import com.example.snapchat.data.repository.UserRepository
+import com.example.snapchat.data.repository.firebase.FirebaseSnapRepository
+import com.example.snapchat.data.repository.SnapRepository
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 /**
  * App container for Dependency injection.
  */
 interface AppContainer {
-    val authRepository: AuthRepository
-    val imageRepository: ImageRepository
+    val userRepository: UserRepository
+    val snapRepository: SnapRepository
 }
 
-class DefaultAppContainer() : AppContainer {
-    override val authRepository: AuthRepository by lazy {
-        FirebaseAuthRepository(Firebase.auth)
+class DefaultAppContainer : AppContainer {
+    override val userRepository: UserRepository by lazy {
+        FirebaseUserRepository(
+            Firebase.auth,
+            Firebase.firestore
+        )
     }
 
-    override val imageRepository: ImageRepository by lazy {
-        FirebaseImageRepository()
+    override val snapRepository: SnapRepository by lazy {
+        FirebaseSnapRepository(
+            Firebase.firestore,
+            Firebase.storage,
+            userRepository
+        )
     }
 }

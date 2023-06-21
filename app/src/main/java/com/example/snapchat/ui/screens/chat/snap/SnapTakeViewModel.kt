@@ -1,23 +1,24 @@
-package com.example.snapchat.ui.screens.camera
+package com.example.snapchat.ui.screens.chat.snap
 
 import android.net.Uri
 import androidx.camera.core.CameraInfo
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.lifecycle.ViewModel
-import com.example.snapchat.data.repository.ImageRepository
-import com.example.snapchat.utilities.hardware.CameraUiState
+import com.example.snapchat.data.model.Image
+import com.example.snapchat.data.repository.SnapRepository
+import com.example.snapchat.utilities.camera.PhotoUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class CameraViewModel(
-    private val imageRepository: ImageRepository
+class SnapTakeViewModel(
+    private val snapRepository: SnapRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CameraUiState())
-    val uiState: StateFlow<CameraUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(PhotoUiState())
+    val uiState: StateFlow<PhotoUiState> = _uiState.asStateFlow()
 
     private val flashMode
         get() = _uiState.value.flashMode
@@ -54,11 +55,13 @@ class CameraViewModel(
 
     fun onImageCapture(
         imageUri: Uri?,
-        navigateToImagePreview: () -> Unit
+        navigateToSnapSend: () -> Unit
     ) {
-        imageRepository.imageUri = imageUri
-        navigateToImagePreview()
+        snapRepository.image = Image(uri = imageUri)
+        navigateToSnapSend()
     }
 }
+
+
 
 

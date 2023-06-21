@@ -47,7 +47,7 @@ fun BasicIconButton(
     ) {
         Icon(
             painter = painterResource(id = icon),
-            contentDescription = "Icon",
+            contentDescription = null,
         )
     }
 }
@@ -70,7 +70,7 @@ fun BasicFilledIconButton(
     ) {
         Icon(
             painter = painterResource(id = icon),
-            contentDescription = "Icon",
+            contentDescription = null,
             modifier = iconModifier
         )
     }
@@ -90,7 +90,7 @@ fun CameraLensIconButton(
     ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_lens),
-                contentDescription = "Lens icon",
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(1.dp)

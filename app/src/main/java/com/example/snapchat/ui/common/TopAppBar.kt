@@ -31,7 +31,7 @@ fun NavigationTopAppBar(
             IconButton(onClick = onNavigation) {
                 Icon(
                     painter = painterResource(navigationIcon),
-                    contentDescription = "TopAppBar Navigation"
+                    contentDescription = null
                 )
             }
         },
@@ -60,7 +60,7 @@ fun ActionTopAppBar(
             IconButton(onClick = onAction) {
                 Icon(
                     painter = painterResource(actionIcon),
-                    contentDescription = "TopAppBar Action"
+                    contentDescription = null
                 )
             }
         }

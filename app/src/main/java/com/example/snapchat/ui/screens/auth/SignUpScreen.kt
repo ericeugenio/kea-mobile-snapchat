@@ -12,6 +12,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.snapchat.ui.ModelViewProvider
 import com.example.snapchat.ui.theme.SnapchatTheme
@@ -21,11 +22,11 @@ import com.example.snapchat.ui.common.*
 @Composable
 fun SignUpScreen(
     navigateBack: () -> Unit,
-    navigateToHome: () -> Unit,
+    navigateToChat: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignUpViewModel = viewModel(factory = ModelViewProvider.Factory)
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold { contentPadding ->
         SignUpBody(
@@ -34,7 +35,7 @@ fun SignUpScreen(
             onEmailChange = viewModel::onEmailChange,
             onPasswordChange = viewModel::onPasswordChange,
             onRepeatPasswordChange = viewModel::onRepeatPasswordChange,
-            onSubmit = { viewModel.signUp(navigateToHome) },
+            onSubmit = { viewModel.onSignUp(navigateToChat) },
             navigateToSignIn = navigateBack,
             modifier = modifier.padding(contentPadding)
         )

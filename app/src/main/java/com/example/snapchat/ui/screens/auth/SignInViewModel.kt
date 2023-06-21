@@ -4,7 +4,7 @@ package com.example.snapchat.ui.screens.auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.snapchat.data.repository.AuthRepository
+import com.example.snapchat.data.repository.UserRepository
 import com.example.snapchat.utilities.isValidEmail
 import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
@@ -33,7 +33,7 @@ class SignInViewModel(
         _uiState.update { it.copy(password = newPassword) }
     }
 
-    fun signIn(navigateToHome: () -> Unit)  {
+    fun onSignIn(navigateToChat: () -> Unit)  {
         if (!email.isValidEmail()) {
             Log.e(TAG, "Email format is invalid.")
             return
@@ -46,8 +46,8 @@ class SignInViewModel(
 
         viewModelScope.launch {
             try {
-                authRepository.signInUser(email, password)
-                navigateToHome()
+                userRepository.signInUser(email, password)
+                navigateToChat()
             }
             /* TODO: catch exceptions in authRepository */
             catch (e: FirebaseAuthException) {

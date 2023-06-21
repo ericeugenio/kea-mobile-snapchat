@@ -2,16 +2,22 @@ package com.example.snapchat.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.snapchat.ui.screens.HomeScreen
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
+import com.example.snapchat.ui.screens.chat.ChatScreen
 import com.example.snapchat.ui.screens.auth.SignInScreen
 import com.example.snapchat.ui.screens.auth.SignUpScreen
-import com.example.snapchat.ui.screens.camera.CameraScreen
-import com.example.snapchat.ui.screens.camera.ImagePreviewScreen
-import com.example.snapchat.ui.screens.profile.ProfileScreen
+import com.example.snapchat.ui.screens.chat.snap.SnapTakeScreen
+import com.example.snapchat.ui.screens.chat.snap.SnapSendScreen
+import com.example.snapchat.ui.screens.auth.ProfileScreen
+import com.example.snapchat.ui.screens.chat.snap.SnapPreviewScreen
 import com.example.snapchat.ui.screens.splash.SplashScreen
+import com.example.snapchat.utilities.popUpToAndNavigate
 
 @Composable
 fun SnapchatNavGraph(
@@ -20,108 +26,122 @@ fun SnapchatNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = SnapchatRoutes.Splash.name,
+        startDestination = Destinations.SplashScreen.route,
+        route = Destinations.RootGraph.route,
         modifier = modifier
     ) {
-        composable(route = SnapchatRoutes.Splash.name) {
+        composable(route = Destinations.SplashScreen.route) {
             SplashScreen(
                 navigateToSignIn = {
-                    navController.popUpToInclusiveAndNavigate(
-                        SnapchatRoutes.SignIn.name,
-                        SnapchatRoutes.Splash.name
+                    navController.popUpToAndNavigate(
+                        Destinations.AuthGraph.route,
+                        Destinations.RootGraph.route
                     )
                 },
-                navigateToHome = {
-                    navController.popUpToInclusiveAndNavigate(
-                        SnapchatRoutes.Home.name,
-                        SnapchatRoutes.Splash.name
+                navigateToChat = {
+                    navController.popUpToAndNavigate(
+                        Destinations.MainGraph.route,
+                        Destinations.RootGraph.route
                     )
                 }
             )
         }
 
-        composable(route = SnapchatRoutes.SignIn.name) {
+        authGraph(navController)
+        mainGraph(navController)
+    }
+}
+
+fun NavGraphBuilder.authGraph(navController: NavHostController) {
+    navigation(
+        startDestination = Destinations.SignInScreen.route,
+        route = Destinations.AuthGraph.route
+    ) {
+        composable(route = Destinations.SignInScreen.route) {
             SignInScreen(
-                navigateToSignUp = { navController.navigate(SnapchatRoutes.SignUp.name) },
-                navigateToHome = {
-                    navController.popUpToInclusiveAndNavigate(
-                        SnapchatRoutes.Home.name,
-                        SnapchatRoutes.SignIn.name
+                navigateToSignUp = { navController.navigate(Destinations.SignUpScreen.route) },
+                navigateToChat = {
+                    navController.popUpToAndNavigate(
+                        Destinations.MainGraph.route,
+                        Destinations.AuthGraph.route
                     )
                 }
             )
         }
 
-        composable(route = SnapchatRoutes.SignUp.name) {
+        composable(route = Destinations.SignUpScreen.route) {
             SignUpScreen(
                 navigateBack = { navController.popBackStack() },
-                navigateToHome = {
-                    navController.popUpToInclusiveAndNavigate(
-                        SnapchatRoutes.Home.name,
-                        SnapchatRoutes.SignIn.name
+                navigateToChat = {
+                    navController.popUpToAndNavigate(
+                        Destinations.MainGraph.route,
+                        Destinations.AuthGraph.route
+                    )
+                }
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.mainGraph(navController: NavHostController) {
+    navigation(
+        startDestination = Destinations.ChatScreen.route,
+        route = Destinations.MainGraph.route
+    ) {
+        composable(route = Destinations.ChatScreen.route) {
+            ChatScreen(
+                navigateToProfile = { navController.navigate(Destinations.ProfileScreen.route) },
+                navigateToSnapTake = { navController.navigate(Destinations.SnapTakeScreen.route) },
+                navigateToSnapSend = { navController.navigate(Destinations.SnapSendScreen.route) },
+                navigateToSnapPreview = { snapId ->
+                    navController.navigate(Destinations.SnapPreviewScreen.createRoute(snapId))
+                }
+            )
+        }
+
+        composable(route = Destinations.ProfileScreen.route) {
+            ProfileScreen(
+                navigateBack = { navController.popBackStack() },
+                navigateToSignIn = {
+                    navController.popUpToAndNavigate(
+                        Destinations.AuthGraph.route,
+                        Destinations.MainGraph.route
                     )
                 }
             )
         }
 
-        composable(route = SnapchatRoutes.Home.name) {
-            HomeScreen(
-                navigateToCamera = {
-                    navController.navigate(SnapchatRoutes.Camera.name)
-                },
-                navigateToProfile = {
-                    navController.navigate(SnapchatRoutes.Profile.name)
-                }
-            )
-        }
-
-        composable(route = SnapchatRoutes.Camera.name) {
-            CameraScreen(
+        composable(route = Destinations.SnapTakeScreen.route) {
+            SnapTakeScreen(
                 navigateBack = { navController.popBackStack() },
-                navigateToImagePreview = { navController.navigate(SnapchatRoutes.ImagePreview.name) }
+                navigateToSnapSend = { navController.navigate(Destinations.SnapSendScreen.route) }
             )
         }
 
         composable(
-            route = SnapchatRoutes.ImagePreview.name
+            route = Destinations.SnapSendScreen.route
         ) {
-            ImagePreviewScreen(
+            SnapSendScreen(
                 navigateBack = { navController.popBackStack() },
-                navigateToHome = { navController.clearBackStackAndNavigate(SnapchatRoutes.Home.name) }
-            )
-        }
-        
-        composable(route = SnapchatRoutes.Profile.name) {
-            ProfileScreen(
-                navigateBack = { navController.popBackStack() },
-                navigateToSignIn = {
-                    navController.clearBackStackAndNavigate(SnapchatRoutes.SignIn.name)
+                navigateToChat = {
+                    navController.popUpToAndNavigate(
+                        Destinations.ChatScreen.route,
+                        Destinations.MainGraph.route
+                    )
                 }
             )
         }
 
-    }
-}
-
-fun NavHostController.popUpToInclusiveAndNavigate(
-    route: String,
-    popUpRoute: String
-) {
-    this.navigate(route) {
-        launchSingleTop = true
-        popUpTo(popUpRoute) {
-            inclusive = true
-        }
-    }
-}
-
-fun NavHostController.clearBackStackAndNavigate(
-    route: String
-) {
-    this.navigate(route) {
-        launchSingleTop = true
-        popUpTo(this@clearBackStackAndNavigate.graph.id) {
-            inclusive = true
+        composable(
+            route = Destinations.SnapPreviewScreen.route,
+            arguments = listOf(
+                navArgument("snapId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            SnapPreviewScreen(
+                snapId = backStackEntry.arguments?.getString("snapId"),
+                navigateBack = { navController.popBackStack() }
+            )
         }
     }
 }

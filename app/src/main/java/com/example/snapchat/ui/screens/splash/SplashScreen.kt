@@ -20,7 +20,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen (
-    navigateToHome: () -> Unit,
+    navigateToChat: () -> Unit,
     navigateToSignIn: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = viewModel(factory = ModelViewProvider.Factory)
@@ -33,7 +33,7 @@ fun SplashScreen (
 
     LaunchedEffect(true) {
         delay(SplashViewModel.SPLASH_DELAY)
-        viewModel.onAppStart(navigateToHome, navigateToSignIn)
+        viewModel.onAppStart(navigateToChat, navigateToSignIn)
     }
 }
 

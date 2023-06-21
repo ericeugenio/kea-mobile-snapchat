@@ -57,7 +57,7 @@ fun MultiFab(
             Icon(
                 modifier = Modifier.rotate(rotationAngle),
                 painter = painterResource(id = icon),
-                contentDescription = "MultiFab action"
+                contentDescription = null
             )
         }
     }
@@ -93,7 +93,7 @@ private fun MultiFabItem(
         ) {
             Icon(
                 painter = painterResource(id = icon),
-                contentDescription = "MultiFabItem action"
+                contentDescription = null
             )
         }
     }

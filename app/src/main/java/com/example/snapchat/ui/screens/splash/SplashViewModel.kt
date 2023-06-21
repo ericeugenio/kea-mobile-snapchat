@@ -1,19 +1,17 @@
 package com.example.snapchat.ui.screens.splash
 
 import androidx.lifecycle.ViewModel
-import com.example.snapchat.data.repository.AuthRepository
+import com.example.snapchat.data.repository.UserRepository
 
 class SplashViewModel (
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     fun onAppStart(
-        navigateToHome: () -> Unit,
+        navigateToChat: () -> Unit,
         navigateToSignIn: () -> Unit
     ) {
-        /* TODO: add necessary configurations */
-
-        if (authRepository.isUserLogged) navigateToHome()
+        if (userRepository.isUserLogged) navigateToChat()
         else navigateToSignIn()
     }
 

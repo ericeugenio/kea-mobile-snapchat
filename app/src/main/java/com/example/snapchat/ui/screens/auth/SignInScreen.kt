@@ -12,6 +12,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.snapchat.ui.ModelViewProvider
 import com.example.snapchat.ui.common.BasicButton
@@ -23,19 +24,19 @@ import com.example.snapchat.ui.common.BasicTextButton
 
 @Composable
 fun SignInScreen(
-    navigateToHome: () -> Unit,
+    navigateToChat: () -> Unit,
     navigateToSignUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SignInViewModel = viewModel(factory = ModelViewProvider.Factory)
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold { contentPadding ->
         SignInBody(
             signInUiState = uiState,
             onEmailChange = viewModel::onEmailChange,
             onPasswordChange = viewModel::onPasswordChange,
-            onSubmit = { viewModel.signIn(navigateToHome) },
+            onSubmit = { viewModel.onSignIn(navigateToChat) },
             navigateToSignUp = navigateToSignUp,
             modifier = modifier.padding(contentPadding)
         )

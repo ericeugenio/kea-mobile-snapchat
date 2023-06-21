@@ -5,55 +5,47 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.snapchat.SnapchatApplication
-import com.example.snapchat.ui.screens.HomeViewModel
+import com.example.snapchat.ui.screens.chat.ChatViewModel
 import com.example.snapchat.ui.screens.auth.SignInViewModel
 import com.example.snapchat.ui.screens.auth.SignUpViewModel
-import com.example.snapchat.ui.screens.camera.CameraViewModel
-import com.example.snapchat.ui.screens.camera.ImagePreviewViewModel
-import com.example.snapchat.ui.screens.profile.ProfileViewModel
+import com.example.snapchat.ui.screens.chat.snap.SnapTakeViewModel
+import com.example.snapchat.ui.screens.chat.snap.SnapSendViewModel
+import com.example.snapchat.ui.screens.auth.ProfileViewModel
+import com.example.snapchat.ui.screens.chat.snap.SnapPreviewViewModel
 import com.example.snapchat.ui.screens.splash.SplashViewModel
 
 object ModelViewProvider {
     val Factory = viewModelFactory {
         initializer {
-            SplashViewModel(
-                authRepository = application().container.authRepository
-            )
+            SplashViewModel(userRepository = application().container.userRepository)
         }
 
         initializer {
-            SignInViewModel(
-                authRepository = application().container.authRepository
-            )
-
+            SignInViewModel(userRepository = application().container.userRepository)
         }
 
         initializer {
-            SignUpViewModel(
-                authRepository = application().container.authRepository
-            )
+            SignUpViewModel(userRepository = application().container.userRepository)
         }
 
         initializer {
-            HomeViewModel()
+            ChatViewModel(snapRepository = application().container.snapRepository)
         }
 
         initializer {
-            CameraViewModel(
-                imageRepository = application().container.imageRepository
-            )
+            SnapTakeViewModel(snapRepository = application().container.snapRepository)
         }
 
         initializer {
-            ImagePreviewViewModel(
-                imageRepository = application().container.imageRepository
-            )
+            SnapSendViewModel(snapRepository = application().container.snapRepository)
         }
 
         initializer {
-            ProfileViewModel(
-                authRepository = application().container.authRepository
-            )
+            SnapPreviewViewModel( snapRepository = application().container.snapRepository)
+        }
+
+        initializer {
+            ProfileViewModel(userRepository = application().container.userRepository)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.snapchat.ui.screens.profile
+package com.example.snapchat.ui.screens.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

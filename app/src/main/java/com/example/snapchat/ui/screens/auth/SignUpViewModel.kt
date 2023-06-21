@@ -3,7 +3,7 @@ package com.example.snapchat.ui.screens.auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.snapchat.data.repository.AuthRepository
+import com.example.snapchat.data.repository.UserRepository
 import com.example.snapchat.utilities.isValidEmail
 import com.example.snapchat.utilities.isValidPassword
 import com.google.firebase.auth.FirebaseAuthException
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
@@ -45,7 +45,7 @@ class SignUpViewModel(
         _uiState.update { it.copy(repeatPassword = newRepeatPassword) }
     }
 
-    fun signUp(navigateToHome: () -> Unit)  {
+    fun onSignUp(navigateToChat: () -> Unit)  {
         if (username.isBlank()) {
             Log.e(TAG, "Username is empty.")
             return
@@ -68,8 +68,8 @@ class SignUpViewModel(
 
         viewModelScope.launch {
             try {
-                authRepository.signUpUser(username, email, password)
-                navigateToHome()
+                userRepository.signUpUser(username, email, password)
+                navigateToChat()
             }
             /* TODO: catch exceptions in authRepository */
             catch (e: FirebaseAuthException) {

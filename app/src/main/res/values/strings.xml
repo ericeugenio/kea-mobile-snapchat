@@ -7,7 +7,15 @@
     <string name="permission_camera_title">Enable camera</string>
     <string name="permission_camera_rationale_text">To take a photo and share it with your friends, the app requires your permission to access the camera.</string>
     <string name="permission_camera_permanently_denied_text">It looks like camera permission has been permanently declined. To take a photo and share it with your friends you should grant permissions from the Settings app.</string>
+    <string name="permission_media_title">Enable media access</string>
+    <string name="permission_media_rationale_text">To select a photo from your gallery and share it with your friends, the app requires your permission to access media.</string>
+    <string name="permission_media_permanently_denied_text">It looks like media permission has been permanently declined. To select a photo from your gallery and share it with your friends you should grant permissions from the Settings app.</string>
 
+
+    <!-- Snaps -->
+    <string name="snap_tap_to_open">Tap to open snap</string>
+    <string name="snap_sent">Snap sent</string>
+    <string name="snap_viewed">Snap viewed</string>
 
     <!-- SignInScreen -->
     <string name="sign_in">Sign in</string>

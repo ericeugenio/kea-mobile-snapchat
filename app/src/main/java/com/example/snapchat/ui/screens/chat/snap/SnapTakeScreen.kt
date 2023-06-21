@@ -1,4 +1,4 @@
-package com.example.snapchat.ui.screens.camera
+package com.example.snapchat.ui.screens.chat.snap
 
 import android.Manifest
 import android.net.Uri
@@ -20,24 +20,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.snapchat.R
 import com.example.snapchat.ui.ModelViewProvider
 import com.example.snapchat.ui.common.*
 import com.example.snapchat.ui.theme.SnapchatTheme
 import com.example.snapchat.utilities.*
-import com.example.snapchat.utilities.hardware.CameraUiState
-import com.example.snapchat.utilities.hardware.PhotoListener
-import com.example.snapchat.utilities.hardware.PhotoManager
+import com.example.snapchat.utilities.camera.PhotoListener
+import com.example.snapchat.utilities.camera.PhotoManager
+import com.example.snapchat.utilities.camera.PhotoUiState
 
 @Composable
-fun CameraScreen(
+fun SnapTakeScreen(
     navigateBack: () -> Unit,
-    navigateToImagePreview: () -> Unit,
+    navigateToSnapSend: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CameraViewModel = viewModel(factory = ModelViewProvider.Factory)
+    viewModel: SnapTakeViewModel = viewModel(factory = ModelViewProvider.Factory)
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
     val isPermissionGranted by remember {
@@ -48,10 +49,10 @@ fun CameraScreen(
 
     Scaffold { contentPadding ->
         if (isPermissionGranted) {
-            CameraWithPermissionBody(
-                cameraUiSate = uiState,
+            SnapTakeWithPermissionBody(
+                photoUiSate = uiState,
                 navigateBack = navigateBack,
-                navigateToImagePreview = navigateToImagePreview,
+                navigateToSnapSend = navigateToSnapSend,
                 onCameraInit = viewModel::onCameraInit,
                 onFlashTapped = viewModel::onFlashTapped,
                 onLensFlipTapped = viewModel::onLensFlipTapped,
@@ -70,10 +71,10 @@ fun CameraScreen(
 }
 
 @Composable
-fun CameraWithPermissionBody(
-    cameraUiSate: CameraUiState,
+fun SnapTakeWithPermissionBody(
+    photoUiSate: PhotoUiState,
     navigateBack: () -> Unit,
-    navigateToImagePreview: () -> Unit,
+    navigateToSnapSend: () -> Unit,
     onCameraInit: (MutableMap<Int, CameraInfo>) -> Unit,
     onFlashTapped: () -> Unit,
     onLensFlipTapped: () -> Unit,
@@ -90,7 +91,7 @@ fun CameraWithPermissionBody(
                 }
 
                 override fun onSuccess(imageUri: Uri?) {
-                    onImageCaptureSuccess(imageUri, navigateToImagePreview)
+                    onImageCaptureSuccess(imageUri, navigateToSnapSend)
                 }
 
                 override fun onError() {
@@ -105,8 +106,8 @@ fun CameraWithPermissionBody(
             .fillMaxSize(),
     ) {
         AndroidView(
-            factory = { photoManager.getPreview(cameraUiSate) },
-            update = { view -> photoManager.getPreview(cameraUiSate, view) },
+            factory = { photoManager.getPreview(photoUiSate) },
+            update = { view -> photoManager.getPreview(photoUiSate, view) },
             modifier = Modifier
                 .fillMaxSize(),
         )
@@ -119,20 +120,15 @@ fun CameraWithPermissionBody(
                 .padding(16.dp)
         )
 
-        if (cameraUiSate.hasFlash()) {
+        if (photoUiSate.hasFlash()) {
             BasicFilledIconButton(
-                icon = if (cameraUiSate.isFlashOn()) R.drawable.ic_flash_on
+                icon = if (photoUiSate.isFlashOn()) R.drawable.ic_flash_on
                     else R.drawable.ic_flash_off,
                 onClick = onFlashTapped,
                 containerAlpha = 0.6F,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(
-                        16.dp,
-                        24.dp,
-                        164.dp,
-                        24.dp
-                    )
+                    .padding(16.dp, 24.dp, 164.dp, 24.dp)
             )
         }
         CameraLensIconButton(
@@ -142,9 +138,9 @@ fun CameraWithPermissionBody(
                 .padding(16.dp)
                 .size(64.dp)
         )
-        if (cameraUiSate.hasDualCamera()) {
+        if (photoUiSate.hasDualCamera()) {
             val rotationAngle by animateFloatAsState(
-                targetValue = if (cameraUiSate.isBackCamera()) 0F else 180F,
+                targetValue = if (photoUiSate.isBackCamera()) 0F else 180F,
                 animationSpec = tween(1000)
             )
 
@@ -154,12 +150,7 @@ fun CameraWithPermissionBody(
                 containerAlpha = 0.6F,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(
-                        164.dp,
-                        24.dp,
-                        16.dp,
-                        24.dp
-                    ),
+                    .padding(164.dp, 24.dp, 16.dp, 24.dp),
                 iconModifier = Modifier
                     .rotate(rotationAngle)
             )
@@ -204,13 +195,13 @@ fun CameraWithoutPermissionBody(
 
 @Preview(showBackground = true)
 @Composable
-fun CameraWithPermissionScreenPreview()
+fun SnapTakeWithPermissionScreenPreview()
 {
     SnapchatTheme {
-        CameraWithPermissionBody(
-            cameraUiSate = CameraUiState(),
+        SnapTakeWithPermissionBody(
+            photoUiSate = PhotoUiState(),
             navigateBack = {},
-            navigateToImagePreview = {},
+            navigateToSnapSend = {},
             onCameraInit = {},
             onFlashTapped = {},
             onLensFlipTapped = {},
@@ -223,7 +214,7 @@ fun CameraWithPermissionScreenPreview()
 
 @Preview(showBackground = true)
 @Composable
-fun CameraWithoutPermissionScreenPreview()
+fun SnapTakeWithoutPermissionScreenPreview()
 {
     SnapchatTheme {
         CameraWithoutPermissionBody(
